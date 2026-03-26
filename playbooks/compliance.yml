@@ -36,7 +36,7 @@
   tasks:
     - name: Run pytest compliance suite
       ansible.builtin.command:
-        cmd: pytest -v tests --artifact-dir artifacts/configs --color=no
+        cmd: pytest -v tests --artifact-dir artifacts/configs --color=no --junitxml artifacts/test-results.xml
       args:
         chdir: "{{ playbook_dir }}/.."
       register: pytest_result

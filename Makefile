@@ -26,7 +26,7 @@ lint:
 	$(RUFF) check .
 
 lint-ansible:
-	$(ANSIBLE_LINT) defaults handlers meta tasks vars molecule
+	$(ANSIBLE_LINT) playbooks inventories molecule
 
 molecule-deps:
 	$(ANSIBLE_GALAXY) collection install -r collections/requirements.yml
@@ -40,7 +40,7 @@ molecule-converge: check-cisco-env
 molecule-test: check-cisco-env
 	$(MOLECULE) test -s $(SCENARIO)
 
-check: lint lint-ansible test
+check: lint lint-ansible
 
 clean:
 	rm -rf $(VENV) .pytest_cache .coverage htmlcov .ruff_cache .molecule
