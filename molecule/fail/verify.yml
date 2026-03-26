@@ -1,0 +1,9 @@
+---
+- name: Verify expected-failure scenario completed
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Debug verification marker
+      ansible.builtin.debug:
+        msg: Fail scenario completed and failure was asserted during converge

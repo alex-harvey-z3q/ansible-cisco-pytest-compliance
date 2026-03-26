@@ -1,0 +1,13 @@
+---
+all:
+  children:
+    cisco:
+      hosts:
+        sandbox:
+          ansible_host: devnetsandboxiosxec8k.cisco.com
+          ansible_user: your_username_here
+          ansible_password: your_password_here
+          ansible_network_os: cisco.ios.ios
+          ansible_connection: ansible.netcommon.network_cli
+          ansible_network_cli_ssh_type: paramiko
+          device_type: branch_router

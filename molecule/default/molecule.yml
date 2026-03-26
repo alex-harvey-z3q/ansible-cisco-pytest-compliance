@@ -1,0 +1,27 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: default
+
+platforms:
+  - name: sandbox
+
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_CONFIG: ../../ansible.cfg
+  inventory:
+    links:
+      hosts: ../../inventories/devnet/hosts.yml
+  playbooks:
+    prepare: prepare.yml
+    converge: converge.yml
+    verify: verify.yml
+
+scenario:
+  name: default
+
+verifier:
+  name: ansible

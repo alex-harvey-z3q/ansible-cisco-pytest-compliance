@@ -1,0 +1,23 @@
+---
+- name: Run compliance playbook and expect success
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Execute compliance playbook
+      ansible.builtin.command:
+        cmd: ansible-playbook -i inventories/devnet/hosts.yml playbooks/compliance.yml
+      args:
+        chdir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
+      environment:
+        ANSIBLE_NOCOLOR: "1"
+        ANSIBLE_FORCE_COLOR: "0"
+        NO_COLOR: "1"
+        TERM: "dumb"
+      register: compliance_run
+      changed_when: false
+      failed_when: compliance_run.rc != 0
+
+    - name: Show compliance output
+      ansible.builtin.debug:
+        var: compliance_run.stdout_lines

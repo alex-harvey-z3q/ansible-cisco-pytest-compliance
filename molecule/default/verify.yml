@@ -1,0 +1,15 @@
+---
+- name: Verify happy-path artifacts exist
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Stat sandbox artifact
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/artifacts/configs/sandbox.json"
+      register: sandbox_artifact
+
+    - name: Assert sandbox artifact exists
+      ansible.builtin.assert:
+        that:
+          - sandbox_artifact.stat.exists

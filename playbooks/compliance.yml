@@ -1,0 +1,48 @@
+---
+- name: Fetch configs from Cisco devices
+  hosts: sandbox
+  gather_facts: false
+
+  tasks:
+    - name: Fetch running config
+      cisco.ios.ios_command:
+        commands:
+          - show running-config
+      register: cisco_running_config
+
+    - name: Ensure local artifact directory exists
+      ansible.builtin.file:
+        path: "{{ playbook_dir }}/../artifacts/configs"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Write config artifact locally
+      ansible.builtin.copy:
+        content: |
+          {
+            "hostname": {{ inventory_hostname | to_json }},
+            "device_type": {{ device_type | default("") | to_json }},
+            "running_config": {{ cisco_running_config.stdout[0] | replace('\r', '') | to_json }}
+          }
+        dest: "{{ playbook_dir }}/../artifacts/configs/{{ inventory_hostname }}.json"
+        mode: "0644"
+      delegate_to: localhost
+
+- name: Run compliance tests locally
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Run pytest compliance suite
+      ansible.builtin.command:
+        cmd: pytest -v tests --artifact-dir artifacts/configs --color=no
+      args:
+        chdir: "{{ playbook_dir }}/.."
+      register: pytest_result
+      changed_when: false
+      failed_when: pytest_result.rc != 0
+
+    - name: Show pytest output
+      ansible.builtin.debug:
+        var: pytest_result.stdout_lines

@@ -1,0 +1,20 @@
+---
+- name: Run compliance playbook and expect failure
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Execute compliance playbook and expect non-zero return code
+      ansible.builtin.command:
+        cmd: ansible-playbook -i inventories/devnet/hosts.yml playbooks/compliance.yml
+      args:
+        chdir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
+      register: compliance_run
+      changed_when: false
+      failed_when: false
+
+    - name: Assert compliance playbook failed as expected
+      ansible.builtin.assert:
+        that:
+          - compliance_run.rc != 0
+          - "'FAILED' in compliance_run.stdout or 'FAILED' in compliance_run.stderr"
