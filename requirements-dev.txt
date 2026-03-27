@@ -6,3 +6,4 @@ ansible-lint>=26.3.0,<27.0
 molecule>=25.0,<26.0
 ansible-core
 ansible-pylibssh
+pytest-html

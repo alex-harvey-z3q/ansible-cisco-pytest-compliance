@@ -2,3 +2,4 @@
 **/__pycache__
 inventories/devnet/hosts.yml
 artifacts
+.DS_Store
